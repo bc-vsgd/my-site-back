@@ -44,6 +44,8 @@ app.get("/countries/sort", async (req, res) => {
     const { data } = await axios.get(`${countriesUrl}/all`);
     // Get the values of query params
     const { name, pop, area } = req.query;
+    const { cont, lang, curr } = req.query;
+
     // console.log(req.query);
     // Sort by name
     if (name) {
@@ -98,6 +100,19 @@ app.get("/countries/sort", async (req, res) => {
           .status(200)
           .json({ message: "Countries: sort by area: desc", data: sortedData });
       }
+    }
+    // Sort by continent
+    if (cont) {
+      // Region or subregion: identical results --> search by region
+      const { data } = await axios.get(`${countriesUrl}/region/${cont}`);
+      return res.status(200).json({ message: "Country continent sort", data });
+    }
+    // Sort by language
+    if (lang) {
+      const { data } = await axios.get(`${countriesUrl}/lang/${lang}`);
+      return res
+        .status(200)
+        .json({ message: `Country language search: ${lang}`, data });
     }
     // if no query params
     return res
