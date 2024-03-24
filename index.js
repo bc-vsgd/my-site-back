@@ -38,7 +38,7 @@ app.get("/countries", async (req, res) => {
   }
 });
 
-// Countries sorted by name, population or area
+// Countries sorted by name, population or area; search by name, continent, language, currency
 app.get("/countries/sort", async (req, res) => {
   // Get the values of query params
   // console.log(req.query);
@@ -140,6 +140,13 @@ app.get("/countries/sort", async (req, res) => {
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
+  }
+  // Sort by currency
+  if (curr) {
+    const { data } = await axios.get(`${countriesUrl}/currency/${curr}`);
+    return res
+      .status(200)
+      .json({ message: `Country currency search: ${curr}`, data });
   }
   // if no query params
   return res.status(200).json({ message: "Countries sort: no query" });
