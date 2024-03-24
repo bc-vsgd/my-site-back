@@ -40,88 +40,112 @@ app.get("/countries", async (req, res) => {
 
 // Countries sorted by name, population or area
 app.get("/countries/sort", async (req, res) => {
-  try {
-    const { data } = await axios.get(`${countriesUrl}/all`);
-    // Get the values of query params
-    const { name, pop, area } = req.query;
-    const { cont, lang, curr } = req.query;
-
-    // console.log(req.query);
-    // Sort by name
-    if (name) {
-      if (name === "asc") {
-        const sortedData = data.sort((a, b) => {
-          return a.name.common.localeCompare(b.name.common);
-        });
-        return res
-          .status(200)
-          .json({ message: "Countries sort by name: asc", data: sortedData });
-      } else if (name === "desc") {
-        const sortedData = data.sort((a, b) => {
-          return b.name.common.localeCompare(a.name.common);
-        });
-        return res
-          .status(200)
-          .json({ message: "Countries sort by name: desc", data: sortedData });
+  // Get the values of query params
+  // console.log(req.query);
+  const { name, pop, area } = req.query;
+  const { namesearch, cont, lang, curr } = req.query;
+  // Sort by name, population or area
+  if (name || pop || area) {
+    try {
+      const { data } = await axios.get(`${countriesUrl}/all`);
+      // Sort by name
+      if (name) {
+        if (name === "asc") {
+          const sortedData = data.sort((a, b) => {
+            return a.name.common.localeCompare(b.name.common);
+          });
+          return res
+            .status(200)
+            .json({ message: "Countries sort by name: asc", data: sortedData });
+        } else if (name === "desc") {
+          const sortedData = data.sort((a, b) => {
+            return b.name.common.localeCompare(a.name.common);
+          });
+          return res.status(200).json({
+            message: "Countries sort by name: desc",
+            data: sortedData,
+          });
+        }
       }
-    }
-    // Sort by population
-    if (pop) {
-      if (pop === "asc") {
-        const sortedData = data.sort((a, b) => {
-          return a.population - b.population;
-        });
-        return res
-          .status(200)
-          .json({ message: "Countries sort: asc", data: sortedData });
-      } else if (pop === "desc") {
-        const sortedData = data.sort((a, b) => {
-          return b.population - a.population;
-        });
-        return res
-          .status(200)
-          .json({ message: "Countries sort: desc", data: sortedData });
+      // Sort by population
+      if (pop) {
+        if (pop === "asc") {
+          const sortedData = data.sort((a, b) => {
+            return a.population - b.population;
+          });
+          return res
+            .status(200)
+            .json({ message: "Countries sort: asc", data: sortedData });
+        } else if (pop === "desc") {
+          const sortedData = data.sort((a, b) => {
+            return b.population - a.population;
+          });
+          return res
+            .status(200)
+            .json({ message: "Countries sort: desc", data: sortedData });
+        }
       }
-    }
-    // Sort by area
-    if (area) {
-      if (area === "asc") {
-        const sortedData = data.sort((a, b) => {
-          return a.area - b.area;
-        });
-        return res
-          .status(200)
-          .json({ message: "Countries: sort by area: asc", data: sortedData });
-      } else if (area === "desc") {
-        const sortedData = data.sort((a, b) => {
-          return b.area - a.area;
-        });
-        return res
-          .status(200)
-          .json({ message: "Countries: sort by area: desc", data: sortedData });
+      // Sort by area
+      if (area) {
+        if (area === "asc") {
+          const sortedData = data.sort((a, b) => {
+            return a.area - b.area;
+          });
+          return res.status(200).json({
+            message: "Countries: sort by area: asc",
+            data: sortedData,
+          });
+        } else if (area === "desc") {
+          const sortedData = data.sort((a, b) => {
+            return b.area - a.area;
+          });
+          return res.status(200).json({
+            message: "Countries: sort by area: desc",
+            data: sortedData,
+          });
+        }
       }
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
     }
-    // Sort by continent
-    if (cont) {
+  }
+  // Search by name
+  if (namesearch) {
+    try {
+      const { data } = await axios.get(`${countriesUrl}/name/${namesearch}`);
+      return res
+        .status(200)
+        .json({ message: `Country name search: ${namesearch}`, data });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  }
+  // Sort by continent
+  if (cont) {
+    try {
       // Region or subregion: identical results --> search by region
       const { data } = await axios.get(`${countriesUrl}/region/${cont}`);
       return res.status(200).json({ message: "Country continent sort", data });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
     }
-    // Sort by language
-    if (lang) {
+  }
+  // Sort by language
+  if (lang) {
+    try {
       const { data } = await axios.get(`${countriesUrl}/lang/${lang}`);
       return res
         .status(200)
         .json({ message: `Country language search: ${lang}`, data });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
     }
-    // if no query params
-    return res
-      .status(200)
-      .json({ message: "Countries sort", query: req.query, data });
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
   }
+  // if no query params
+  return res.status(200).json({ message: "Countries sort: no query" });
 });
+
+// UNUSED ROUTE
 
 // Countries searched by name, region/subregion (identical results), language or currency
 app.get("/countries/search", async (req, res) => {
