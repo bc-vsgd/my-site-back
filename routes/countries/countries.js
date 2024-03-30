@@ -4,7 +4,6 @@ const router = express.Router();
 
 const countriesUrl = process.env.COUNTRIES_API_URL;
 
-// UNUSED ROUTE
 // All countries, alphabetical sort
 router.get("/countries", async (req, res) => {
   try {
@@ -102,7 +101,9 @@ router.get("/countries/sort", async (req, res) => {
 router.get("/country/:name", async (req, res) => {
   try {
     const { name } = req.params;
-    const { data } = await axios.get(`${countriesUrl}/name/${name}`);
+    const { data } = await axios.get(
+      `${countriesUrl}/name/${name}?fullText=true`
+    );
     return res.status(200).json({ message: `One country: ${name}`, data });
   } catch (error) {
     return res.status(500).json({ message: error.message });
