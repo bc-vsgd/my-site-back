@@ -97,6 +97,32 @@ router.get("/countries/sort", async (req, res) => {
   return res.status(200).json({ message: "Countries sort: no query" });
 });
 
+// Countries searched by name, continent
+router.get("/countries/search", async (req, res) => {
+  // Get the values of query params
+  const { namesearch, cont } = req.query;
+  if (namesearch) {
+    try {
+      const { data } = await axios.get(`${countriesUrl}/name/${namesearch}`);
+      return res
+        .status(200)
+        .json({ message: "Countries searched by name", data: data });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  }
+  if (cont) {
+    try {
+      const { data } = await axios.get(`${countriesUrl}/region/${cont}`);
+      return res
+        .status(200)
+        .json({ message: "Countries searched by continent", data: data });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  }
+});
+
 // One country
 router.get("/country/:name", async (req, res) => {
   try {
