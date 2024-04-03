@@ -4,6 +4,7 @@ const router = express.Router();
 
 const countriesUrl = process.env.COUNTRIES_API_URL;
 
+// GET
 // All countries, alphabetical sort
 router.get("/countries", async (req, res) => {
   try {
@@ -23,6 +24,7 @@ router.get("/countries", async (req, res) => {
   }
 });
 
+// GET
 // Countries sorted by name, population or area
 router.get("/countries/sort", async (req, res) => {
   // Get the values of query params
@@ -97,10 +99,11 @@ router.get("/countries/sort", async (req, res) => {
   return res.status(200).json({ message: "Countries sort: no query" });
 });
 
-// Countries searched by name, continent
+// GET
+// Countries searched by name, continent, language
 router.get("/countries/search", async (req, res) => {
   // Get the values of query params
-  const { namesearch, cont } = req.query;
+  const { namesearch, cont, lang, curr } = req.query;
   if (namesearch) {
     try {
       const { data } = await axios.get(`${countriesUrl}/name/${namesearch}`);
@@ -121,8 +124,33 @@ router.get("/countries/search", async (req, res) => {
       return res.status(500).json({ message: error.message });
     }
   }
+  if (lang) {
+    try {
+      const { data } = await axios.get(`${countriesUrl}/lang/${lang}`);
+      return res.status(200).json({
+        message: `Countries searched by language: ${lang}`,
+        data: data,
+      });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  }
+  if (curr) {
+    try {
+      const { data } = await axios.get(`${countriesUrl}/currency/${curr}`);
+      return res
+        .status(200)
+        .json({
+          message: `Countries searched by currency: ${curr}`,
+          data: data,
+        });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  }
 });
 
+// GET
 // One country
 router.get("/country/:name", async (req, res) => {
   try {
