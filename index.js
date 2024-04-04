@@ -3,7 +3,7 @@ const express = require("express");
 const cors = require("cors");
 
 const app = express();
-app.use(cors());
+app.use(cors({ origin: "https://site--home--r6xgg7xm7vcz.code.run" }));
 // Countries routes
 const countriesRoutes = require("./routes/countries/countries");
 app.use(countriesRoutes);
