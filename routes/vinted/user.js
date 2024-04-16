@@ -16,8 +16,7 @@ const User = require("../../models/vinted/User");
 
 //CREATE
 //Sign up
-// router.post("/user/signup", fileUpload(), async (req, res) => {
-router.post("vinted/user/signup", fileUpload(), async (req, res) => {
+router.post("/vinted/user/signup", fileUpload(), async (req, res) => {
   try {
     const { username, email, password, newsletter } = req.body;
     // console.log(username);
@@ -69,8 +68,7 @@ router.post("vinted/user/signup", fileUpload(), async (req, res) => {
 });
 
 //Log in
-// router.post("/user/login", async (req, res) => {
-router.post("vinted/user/login", async (req, res) => {
+router.post("/vinted/user/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     const foundUser = await User.findOne({ email });

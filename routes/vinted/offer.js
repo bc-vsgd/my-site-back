@@ -11,14 +11,13 @@ cloudinary.config({
 });
 
 const isAuthenticated = require("../../middlewares/vinted/isAuthenticated");
-const convertFile = require("../../utils/vinted/convertFile");
+const convertFile = require("../../utils/convertFile");
 const Offer = require("../../models/vinted/Offer");
 const User = require("../../models/vinted/User");
 
 //CREATE
 //Publish an offer
 router.post(
-  //   "/offer/publish",
   "/vinted/offer/publish",
   isAuthenticated,
   fileUpload(),
@@ -115,8 +114,7 @@ router.post(
 
 //READ
 //Get offers with filters
-// router.get("/offers", async (req, res) => {
-router.get("vinted/offers", async (req, res) => {
+router.get("/vinted/offers", async (req, res) => {
   try {
     const { title, priceMin, priceMax, sort, page } = req.query;
     //Title, priceMax, priceMin
@@ -159,8 +157,7 @@ router.get("vinted/offers", async (req, res) => {
 
 //READ
 //Get offer by id
-// router.get("/offer/:id", async (req, res) => {
-router.get("vinted/offer/:id", async (req, res) => {
+router.get("/vinted/offer/:id", async (req, res) => {
   try {
     const offerId = req.params.id;
     console.log("back >>> route offer/:id >>>>", offerId);
@@ -193,8 +190,7 @@ router.get("vinted/offer/:id", async (req, res) => {
 
 //UPDATE
 //Update by ID
-// router.put("/offer/modify/:id", fileUpload(), async (req, res) => {
-router.put("vinted/offer/modify/:id", fileUpload(), async (req, res) => {
+router.put("/vinted/offer/modify/:id", fileUpload(), async (req, res) => {
   try {
     //Check offer (by id)
     const offerId = req.params.id;
@@ -284,8 +280,7 @@ router.put("vinted/offer/modify/:id", fileUpload(), async (req, res) => {
 
 //DELETE
 //Delete by id
-// router.delete("/offer/remove/:id", async (req, res) => {
-router.delete("vinted/offer/remove/:id", async (req, res) => {
+router.delete("/vinted/offer/remove/:id", async (req, res) => {
   try {
     //Check offer by id
     const offerId = req.params.id;
