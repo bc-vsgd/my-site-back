@@ -12,7 +12,8 @@ const countriesRoutes = require("./routes/countries/countries");
 app.use(countriesRoutes);
 
 // VINTED
-// mongoose.connect(`${process.env.MONGODB_URI}Vinted`);
+mongoose.connect(`${process.env.MONGODB_URI}Vinted`);
+console.log(process.env.MONGODB_URI);
 
 const vintedHomeRoutes = require("./routes/vinted/home");
 const vintedOfferRoutes = require("./routes/vinted/offer");
