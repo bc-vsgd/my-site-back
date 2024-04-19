@@ -13,14 +13,15 @@ app.use(countriesRoutes);
 
 // VINTED
 mongoose.connect(`${process.env.MONGODB_URI}Vinted`);
-console.log(process.env.MONGODB_URI);
 
 const vintedHomeRoutes = require("./routes/vinted/home");
 const vintedOfferRoutes = require("./routes/vinted/offer");
 const vintedUserRoutes = require("./routes/vinted/user");
+const vintedPaymentRoutes = require("./routes/vinted/payment");
 app.use(vintedHomeRoutes);
 app.use(vintedOfferRoutes);
 app.use(vintedUserRoutes);
+app.use(vintedPaymentRoutes);
 
 app.all("*", (req, res) => {
   return res.status(400).json({ message: "This page does not exist" });
