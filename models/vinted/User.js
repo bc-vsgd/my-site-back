@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+mongoose.connect(`${process.env.MONGODB_URI}Vinted`);
 
 const User = mongoose.model("User", {
   email: String,

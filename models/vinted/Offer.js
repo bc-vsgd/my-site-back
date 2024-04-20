@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+mongoose.connect(`${process.env.MONGODB_URI}Vinted`);
 
 const Offer = mongoose.model("Offer", {
   product_name: String,

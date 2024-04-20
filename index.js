@@ -11,8 +11,17 @@ app.use(express.json());
 const countriesRoutes = require("./routes/countries/countries");
 app.use(countriesRoutes);
 
+// VISITS
+// const visitHomeRoutes = require("./routes/visits/home");
+// app.use(visitHomeRoutes);
+// const visitSpotRoutes = require("./routes/visits/spot");
+// app.use(visitSpotRoutes);
+// const visitAuthorRoutes = require("./routes/visits/author");
+// app.use(visitAuthorRoutes);
+// const visitVisitRoutes = require("./routes/visits/visit");
+// app.use(visitVisitRoutes);
 // VINTED
-mongoose.connect(`${process.env.MONGODB_URI}Vinted`);
+// mongoose.connect(`${process.env.MONGODB_URI}Vinted`);
 
 const vintedHomeRoutes = require("./routes/vinted/home");
 const vintedOfferRoutes = require("./routes/vinted/offer");

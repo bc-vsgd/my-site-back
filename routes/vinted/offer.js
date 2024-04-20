@@ -11,7 +11,7 @@ cloudinary.config({
 });
 
 const isAuthenticated = require("../../middlewares/vinted/isAuthenticated");
-const convertFile = require("../../utils/convertFile");
+const convertToBase64 = require("../../utils/convertToBase64");
 const Offer = require("../../models/vinted/Offer");
 const User = require("../../models/vinted/User");
 
@@ -64,7 +64,7 @@ router.post(
       if (req.files) {
         //One file
         if (req.files.picture.length === undefined) {
-          const convertedFile = convertFile(req.files.picture);
+          const convertedFile = convertToBase64(req.files.picture);
           const sentFile = await cloudinary.uploader.upload(convertedFile, {
             folder: `vinted/offers/${newOffer.id}`,
             public_id: "preview",
@@ -78,7 +78,7 @@ router.post(
             const picture = req.files.picture[i];
             //First file
             if (i === 0) {
-              const convertedFile = convertFile(picture);
+              const convertedFile = convertToBase64(picture);
               const sentFile = await cloudinary.uploader.upload(convertedFile, {
                 folder: `vinted/offers/${newOffer.id}`,
                 public_id: "preview",
@@ -88,7 +88,7 @@ router.post(
             }
             //Other files
             else {
-              const convertedFile = convertFile(picture);
+              const convertedFile = convertToBase64(picture);
               const sentFile = await cloudinary.uploader.upload(convertedFile, {
                 folder: `vinted/offers/${newOffer.id}`,
               });
@@ -160,7 +160,7 @@ router.get("/vinted/offers", async (req, res) => {
 router.get("/vinted/offer/:id", async (req, res) => {
   try {
     const offerId = req.params.id;
-    console.log("back >>> route offer/:id >>>>", offerId);
+    // console.log("back >>> route offer/:id >>>>", offerId);
     // DATA BASE REQUEST
     //
     const foundOffer = await Offer.findById(offerId).populate({
@@ -253,7 +253,7 @@ router.put("/vinted/offer/modify/:id", fileUpload(), async (req, res) => {
       await cloudinary.uploader.destroy(foundOffer.product_image.public_id);
       //Upload
       const picture = req.files.picture;
-      const convertedFile = convertFile(picture);
+      const convertedFile = convertToBase64(picture);
       const sentFile = await cloudinary.uploader.upload(convertedFile, {
         folder: `vinted/offers/${foundOffer.id}`,
         public_id: "preview",
