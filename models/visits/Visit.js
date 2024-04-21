@@ -1,14 +1,19 @@
 const mongoose = require("mongoose");
-// mongoose.connect(`${process.env.MONGODB_URI_VISITS}pics-visits`);
+const Author = require("./Author");
+const dbVisits = mongoose.createConnection(
+  `${process.env.MONGODB_URI_VISITS}pics-visits`
+);
 
-const Visit = mongoose.model("Visit", {
+const visitSchema = mongoose.Schema({
   title: String,
   city: String,
   city_details: String,
   author: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Author",
+    ref: Author,
   },
 });
+
+const Visit = dbVisits.model("Visit", visitSchema);
 
 module.exports = Visit;

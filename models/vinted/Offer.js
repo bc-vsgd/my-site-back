@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const User = require("../../models/vinted/User");
+const User = require("./User");
 const dbVinted = mongoose.createConnection(`${process.env.MONGODB_URI}Vinted`);
 
 const offerSchema = mongoose.Schema({

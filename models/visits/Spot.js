@@ -1,7 +1,10 @@
 const mongoose = require("mongoose");
-// mongoose.connect(`${process.env.MONGODB_URI_VISITS}pics-visits`);
+const Visit = require("./Visit");
+const dbVisits = mongoose.createConnection(
+  `${process.env.MONGODB_URI_VISITS}pics-visits`
+);
 
-const Spot = mongoose.model("Spot", {
+const spotSchema = mongoose.Schema({
   title: String,
   categories: [String],
   description: String,
@@ -11,8 +14,10 @@ const Spot = mongoose.model("Spot", {
   spot_pictures: [Object],
   visit: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Visit",
+    ref: Visit,
   },
 });
+
+const Spot = dbVisits.model("Spot", spotSchema);
 
 module.exports = Spot;

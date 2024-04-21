@@ -17,7 +17,8 @@ router.post("/visits/author/signup", async (req, res) => {
     const hash = SHA256(saltedPassword).toString(encBase64);
     const token = uid2(16);
     // Account creation
-    const foundAuthor = await Author.findOne({ token: token });
+    // const foundAuthor = await Author.findOne({ token: token });
+    const foundAuthor = await Author.findOne({ email: email });
     if (!foundAuthor) {
       const newAuthor = new Author({
         username,
@@ -54,6 +55,7 @@ router.post("/visits/author/login", async (req, res) => {
         return res.status(401).json({ message: "Unauthorized" });
       }
     } else {
+      return res.status(401).json({ message: "Unauthorized" });
     }
   } catch (error) {
     return res.status(500).json({ message: error.message });

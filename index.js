@@ -1,7 +1,6 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-// const mongoose = require("mongoose");
 
 const app = express();
 app.use(cors());
@@ -12,14 +11,14 @@ const countriesRoutes = require("./routes/countries/countries");
 app.use(countriesRoutes);
 
 // VISITS
-// const visitHomeRoutes = require("./routes/visits/home");
-// app.use(visitHomeRoutes);
-// const visitSpotRoutes = require("./routes/visits/spot");
-// app.use(visitSpotRoutes);
-// const visitAuthorRoutes = require("./routes/visits/author");
-// app.use(visitAuthorRoutes);
-// const visitVisitRoutes = require("./routes/visits/visit");
-// app.use(visitVisitRoutes);
+const visitHomeRoutes = require("./routes/visits/home");
+const visitSpotRoutes = require("./routes/visits/spot");
+const visitAuthorRoutes = require("./routes/visits/author");
+const visitVisitRoutes = require("./routes/visits/visit");
+app.use(visitHomeRoutes);
+app.use(visitSpotRoutes);
+app.use(visitAuthorRoutes);
+app.use(visitVisitRoutes);
 
 // VINTED
 const vintedHomeRoutes = require("./routes/vinted/home");

@@ -1,12 +1,16 @@
 const mongoose = require("mongoose");
-// mongoose.connect(`${process.env.MONGODB_URI_VISITS}pics-visits`);
+const dbVisits = mongoose.createConnection(
+  `${process.env.MONGODB_URI_VISITS}pics-visits`
+);
 
-const Author = mongoose.model("Author", {
+const authorSchema = mongoose.Schema({
   username: String,
   email: String,
   hash: String,
   salt: String,
   token: String,
 });
+
+const Author = dbVisits.model("Author", authorSchema);
 
 module.exports = Author;
