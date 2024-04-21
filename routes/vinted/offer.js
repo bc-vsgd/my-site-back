@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const fileUpload = require("express-fileupload");
 const cloudinary = require("cloudinary").v2;
-const axios = require("axios");
+// const axios = require("axios");
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -13,7 +13,6 @@ cloudinary.config({
 const isAuthenticated = require("../../middlewares/vinted/isAuthenticated");
 const convertToBase64 = require("../../utils/convertToBase64");
 const Offer = require("../../models/vinted/Offer");
-const User = require("../../models/vinted/User");
 
 //CREATE
 //Publish an offer

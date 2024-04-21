@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose");
 
 const app = express();
 app.use(cors());
@@ -20,9 +20,8 @@ app.use(countriesRoutes);
 // app.use(visitAuthorRoutes);
 // const visitVisitRoutes = require("./routes/visits/visit");
 // app.use(visitVisitRoutes);
-// VINTED
-// mongoose.connect(`${process.env.MONGODB_URI}Vinted`);
 
+// VINTED
 const vintedHomeRoutes = require("./routes/vinted/home");
 const vintedOfferRoutes = require("./routes/vinted/offer");
 const vintedUserRoutes = require("./routes/vinted/user");
