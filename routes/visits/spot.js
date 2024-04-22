@@ -18,17 +18,18 @@ const convertToBase64 = require("../../utils/convertToBase64");
 
 router.post("/visit/:id/spot/create", fileUpload(), async (req, res) => {
   try {
-    const { title, category, description } = req.body;
+    const { title, categories, description, link } = req.body;
     const pictures = req.files?.pictures;
     const { id } = req.params;
     const foundVisit = await Visit.findOne({ _id: id });
     // Visit found => new Spot
     if (foundVisit) {
-      const catArr = category.split("-");
+      const catArr = categories.split("-");
       const newSpot = new Spot({
         title: title,
         categories: catArr,
         description: description,
+        link: link,
         visit: foundVisit,
       });
       // Picture(s)

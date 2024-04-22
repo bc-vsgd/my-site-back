@@ -3,6 +3,7 @@ const router = express.Router();
 
 const Visit = require("../../models/visits/Visit");
 const Author = require("../../models/visits/Author");
+const Spot = require("../../models/visits/Spot");
 
 router.post("/visits/visit/create", async (req, res) => {
   try {
@@ -35,4 +36,20 @@ router.post("/visits/visit/create", async (req, res) => {
   }
 });
 
+router.get("/visit/:id/spots", async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log("id: ", id);
+    // const foundSpots = await Spot.find().populate("visit");
+    const foundSpots = await Spot.find()
+      .populate("visit", "_id")
+      .find({ visit: { _id: id } });
+    if (foundSpots.length === 0) {
+      return res.status(400).json({ message: "No spot for this visit" });
+    }
+    return res.status(200).json({ Spots: foundSpots });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
 module.exports = router;

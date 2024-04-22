@@ -8,6 +8,7 @@ const spotSchema = mongoose.Schema({
   title: String,
   categories: [String],
   description: String,
+  link: String,
   // Main picture (preview)
   spot_image: Object,
   // All pictures
