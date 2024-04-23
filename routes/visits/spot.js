@@ -24,10 +24,9 @@ router.post("/visit/:id/spot/create", fileUpload(), async (req, res) => {
     const foundVisit = await Visit.findOne({ _id: id });
     // Visit found => new Spot
     if (foundVisit) {
-      const catArr = categories.split("-");
       const newSpot = new Spot({
         title: title,
-        categories: catArr,
+        categories: JSON.parse(categories),
         description: description,
         link: link,
         visit: foundVisit,
@@ -43,9 +42,9 @@ router.post("/visit/:id/spot/create", fileUpload(), async (req, res) => {
           });
           newSpot.spot_image = sentFile;
           // Coords
-          const { latitude, longitude } = await getGeoLocation(sentFile.url);
-          console.log("geolocation: ", latitude);
-          console.log("geolocation: ", longitude);
+          // const { latitude, longitude } = await getGeoLocation(sentFile.url);
+          // console.log("geolocation: ", latitude);
+          // console.log("geolocation: ", longitude);
         }
         // Many pictures
         else {
@@ -57,9 +56,9 @@ router.post("/visit/:id/spot/create", fileUpload(), async (req, res) => {
           });
           newSpot.spot_image = sentFile;
           // Coords
-          const { latitude, longitude } = await getGeoLocation(sentFile.url);
-          console.log("geolocation: ", latitude);
-          console.log("geolocation: ", longitude);
+          // const { latitude, longitude } = await getGeoLocation(sentFile.url);
+          // console.log("geolocation: ", latitude);
+          // console.log("geolocation: ", longitude);
           // Other pictures array (spot_pictures)
           const picsArray = [];
           for (let i = 1; i < pictures.length; i++) {
