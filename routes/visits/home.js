@@ -1,10 +1,9 @@
 const express = require("express");
 const router = express.Router();
-// Mongoose
-// const mongoose = require("mongoose");
 // Models
 const Visit = require("../../models/visits/Visit");
 
+// Get all visits
 router.get("/visits", async (req, res) => {
   try {
     const foundVisits = await Visit.find();
@@ -18,26 +17,19 @@ router.get("/visits", async (req, res) => {
   }
 });
 
+// Get visits by author id
 router.get("/visits/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    console.log("id: ", id);
     const foundVisits = await Visit.find();
-
-    const authorVisits = await Visit.find()
-      .populate("author", "_id")
-      .find({ author: { _id: id } });
     if (foundVisits) {
+      const authorVisits = [];
       const otherVisits = [];
       for (let i = 0; i < foundVisits.length; i++) {
         const visit = foundVisits[i];
-        console.log("visit id: ", visit._id.toString());
-        console.log("author id: ", visit.author._id.toString());
-        console.log("params id: ", id);
         if (visit.author._id.toString() === id) {
-          console.log("id ok");
+          authorVisits.push(visit);
         } else {
-          console.log("id not ok");
           otherVisits.push(visit);
         }
       }

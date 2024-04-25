@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
 
 // Password encryption
 const SHA256 = require("crypto-js/sha256");
@@ -7,6 +8,24 @@ const encBase64 = require("crypto-js/enc-base64");
 const uid2 = require("uid2");
 // Models
 const Author = require("../../models/visits/Author");
+const Visit = require("../../models/visits/Visit");
+
+// Get an author by token
+router.get("/visits/author/author", async (req, res) => {
+  try {
+    const userToken = req.headers.authorization.replace("Bearer ", "");
+    const foundAuthor = await Author.find({ token: userToken });
+    if (foundAuthor.length > 0) {
+      return res
+        .status(200)
+        .json({ message: "Author found", data: foundAuthor });
+    } else {
+      return res.status(400).json({ message: "No author with this token" });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
 
 router.post("/visits/author/signup", async (req, res) => {
   try {
