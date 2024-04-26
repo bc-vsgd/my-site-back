@@ -5,6 +5,7 @@ const Visit = require("../../models/visits/Visit");
 const Author = require("../../models/visits/Author");
 const Spot = require("../../models/visits/Spot");
 
+// POST: Create a visit (title ...)
 router.post("/visits/visit/create", async (req, res) => {
   try {
     const token = req.headers.authorization.replace("Bearer ", "");
@@ -36,10 +37,27 @@ router.post("/visits/visit/create", async (req, res) => {
   }
 });
 
+// GET: Get a visit by id
+router.get("/visits/visit/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const foundVisit = await Visit.find({ _id: id });
+    if (foundVisit.length > 0) {
+      // console.log("visit by id, found visit: ", foundVisit);
+      return res.status(200).json({ message: "Visit found", data: foundVisit });
+    } else {
+      return res.status(400).json({ message: "No visit found" });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+
+// GET: Get spots by visit id
 router.get("/visit/:id/spots", async (req, res) => {
   try {
     const { id } = req.params;
-    console.log("id: ", id);
+    // console.log("id: ", id);
     // const foundSpots = await Spot.find().populate("visit");
     const foundSpots = await Spot.find()
       .populate("visit", "_id")
@@ -47,7 +65,7 @@ router.get("/visit/:id/spots", async (req, res) => {
     if (foundSpots.length === 0) {
       return res.status(400).json({ message: "No spot for this visit" });
     }
-    return res.status(200).json({ Spots: foundSpots });
+    return res.status(200).json({ message: "Spots found", data: foundSpots });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

@@ -10,7 +10,7 @@ const uid2 = require("uid2");
 const Author = require("../../models/visits/Author");
 const Visit = require("../../models/visits/Visit");
 
-// Get an author by token
+// GET: Get an author by token
 router.get("/visits/author/author", async (req, res) => {
   try {
     const userToken = req.headers.authorization.replace("Bearer ", "");

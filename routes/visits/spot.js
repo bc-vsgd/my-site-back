@@ -16,6 +16,7 @@ cloudinary.config({
 });
 const convertToBase64 = require("../../utils/convertToBase64");
 
+// POST: Create a spot by visit id
 router.post("/visit/:id/spot/create", fileUpload(), async (req, res) => {
   try {
     const { title, categories, description, link } = req.body;

@@ -3,7 +3,7 @@ const router = express.Router();
 // Models
 const Visit = require("../../models/visits/Visit");
 
-// Get all visits
+// GET: Get all visits
 router.get("/visits", async (req, res) => {
   try {
     const foundVisits = await Visit.find().populate("author");
@@ -17,7 +17,7 @@ router.get("/visits", async (req, res) => {
   }
 });
 
-// Get visits by author id
+// GET: Get visits by author id
 router.get("/visits/:id", async (req, res) => {
   try {
     const { id } = req.params;
