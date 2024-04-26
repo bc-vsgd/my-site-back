@@ -27,6 +27,7 @@ router.get("/visits/author/author", async (req, res) => {
   }
 });
 
+// POST: Sign up
 router.post("/visits/author/signup", async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -36,8 +37,8 @@ router.post("/visits/author/signup", async (req, res) => {
     const hash = SHA256(saltedPassword).toString(encBase64);
     const token = uid2(16);
     // Account creation
-    // const foundAuthor = await Author.findOne({ token: token });
     const foundAuthor = await Author.findOne({ email: email });
+    // console.log("author route, sign up, foundAuthor: ", foundAuthor);
     if (!foundAuthor) {
       const newAuthor = new Author({
         username,
@@ -58,6 +59,7 @@ router.post("/visits/author/signup", async (req, res) => {
   }
 });
 
+// POST: Log in
 router.post("/visits/author/login", async (req, res) => {
   try {
     const { email, password } = req.body;

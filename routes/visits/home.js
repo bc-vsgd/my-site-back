@@ -6,7 +6,7 @@ const Visit = require("../../models/visits/Visit");
 // Get all visits
 router.get("/visits", async (req, res) => {
   try {
-    const foundVisits = await Visit.find();
+    const foundVisits = await Visit.find().populate("author");
     if (foundVisits.length !== 0) {
       return res.status(200).json({ message: "Home page", data: foundVisits });
     } else {
@@ -21,7 +21,7 @@ router.get("/visits", async (req, res) => {
 router.get("/visits/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const foundVisits = await Visit.find();
+    const foundVisits = await Visit.find().populate("author");
     if (foundVisits) {
       const authorVisits = [];
       const otherVisits = [];
