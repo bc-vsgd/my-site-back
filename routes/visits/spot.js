@@ -16,6 +16,21 @@ cloudinary.config({
 });
 const convertToBase64 = require("../../utils/convertToBase64");
 
+// GET: Get a spot by id
+router.get("/visit/spot/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const foundSpot = await Spot.findOne({ _id: id });
+    if (foundSpot) {
+      return res.status(200).json({ message: "Spot found", data: foundSpot });
+    } else {
+      return res.status(400).json({ message: "No spot found" });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+
 // POST: Create a spot by visit id
 router.post("/visit/:id/spot/create", fileUpload(), async (req, res) => {
   try {
@@ -88,6 +103,90 @@ router.post("/visit/:id/spot/create", fileUpload(), async (req, res) => {
       return res
         .status(500)
         .json({ message: "This spot must belong to a visit" });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+
+// PUT: Update a spot by its id (NOT visit id)
+router.put("/visit/spot/:id/update", fileUpload(), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, categories, description, link } = req.body;
+    const picsArray = JSON.parse(req.body.picsArray);
+    // console.log("update spot, pics array: ", picsArray);
+    const pictures = req.files?.pictures;
+    const foundSpot = await Spot.findOne({ _id: id });
+    // The spot does not exist
+    if (!foundSpot) {
+      // console.log("! found spot");
+      return res.status(400).json({ message: "This spot does not exist" });
+    } else {
+      // console.log("found spot");
+      //
+      // The spot exists
+      foundSpot.title = title;
+      foundSpot.categories = JSON.parse(categories);
+      foundSpot.description = description;
+      foundSpot.link = link;
+      // Picture(s)
+      if (pictures || picsArray) {
+        console.log("pictures");
+        // if picsArray => [0]: spot_image; others: spot_pictures
+        if (picsArray) {
+          // 1st (or only) picture => spot_image
+          foundSpot.spot_image = picsArray[0];
+          // If other pictures => spot_pictures
+          if (picsArray.length > 1) {
+            foundSpot.spot_pictures = [];
+            for (let i = 1; i < picsArray.length; i++) {
+              foundSpot.spot_pictures.push(picsArray[i]);
+            }
+          }
+          // If files-pictures
+          if (pictures) {
+            // 1 file = {}
+            if (!Array.isArray(pictures)) {
+              const convertedFile = convertToBase64(pictures);
+              const sentFile = await cloudinary.uploader.upload(convertedFile, {
+                folder: `/visits/spots/${foundSpot._id}`,
+              });
+              foundSpot.spot_pictures.push(sentFile);
+            }
+
+            // > 1 file  =[]
+            else {
+              for (let i = 1; i < pictures.length; i++) {
+                const convertedFile = convertToBase64(pictures[i]);
+                const sentFile = await cloudinary.uploader.upload(
+                  convertedFile,
+                  {
+                    folder: `/visits/spots/${foundSpot._id}`,
+                  }
+                );
+                foundSpot.spot_pictures.push(sentFile);
+              }
+            }
+          } // fin: if pictures
+        } // fin: if (picsArray)
+      } //fin  if (pictures || picsArray)
+
+      // // if pictures: spot_pictures
+      // else: only pictures: [0]: spot image; others: spot_pictures
+
+      // No picture => no Spot
+      else {
+        console.log("no picture");
+        return res
+          .status(400)
+          .json({ message: "There must be at least one picture" });
+      }
+      // Save + response
+      await foundSpot.save();
+      return res
+        .status(200)
+        .json({ message: "Spot successfully updated !", data: foundSpot });
     }
   } catch (error) {
     return res.status(500).json({ message: error.message });
