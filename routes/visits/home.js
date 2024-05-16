@@ -8,9 +8,13 @@ router.get("/visits", async (req, res) => {
   try {
     const foundVisits = await Visit.find().populate("author");
     if (foundVisits.length !== 0) {
-      return res.status(200).json({ message: "Home page", data: foundVisits });
+      return res
+        .status(200)
+        .json({ message: "Home page", foundVisits: foundVisits });
     } else {
-      return res.status(200).json({ message: "Home page, no visits for now" });
+      return res
+        .status(200)
+        .json({ message: "Home page, no visits for now", foundVisits: [] });
     }
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -42,7 +46,14 @@ router.get("/visits/:id", async (req, res) => {
     }
     // No visit
     else {
-      return res.status(200).json({ message: "Home page, no visit for now" });
+      return res
+        .status(200)
+        .json({
+          message: "Home page, no visit for now",
+          foundVisits: [],
+          authorVisits: [],
+          otherVisits: [],
+        });
     }
   } catch (error) {
     return res.status(500).json({ message: error.message });

@@ -41,7 +41,7 @@ router.post("/visits/visit/create", async (req, res) => {
 router.get("/visits/visit/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const foundVisit = await Visit.find({ _id: id });
+    const foundVisit = await Visit.find({ _id: id }).populate("author");
     if (foundVisit.length > 0) {
       // console.log("visit by id, found visit: ", foundVisit);
       return res.status(200).json({ message: "Visit found", data: foundVisit });
@@ -66,6 +66,44 @@ router.get("/visit/:id/spots", async (req, res) => {
       return res.status(400).json({ message: "No spot for this visit" });
     }
     return res.status(200).json({ message: "Spots found", data: foundSpots });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+
+// PUT: Update a visit (title ...) by id
+router.put("/visits/visit/:id/update", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, city, details } = req.body;
+    const token = req.headers.authorization.replace(`Bearer `, "");
+    const foundAuthor = await Author.findOne({ token: token });
+    if (!foundAuthor) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    // Token => author found
+    else {
+      const foundVisit = await Visit.findById(id);
+      if (!foundVisit) {
+        return res.status(400).json({ message: "This visit does not exist" });
+      }
+      // Visit found
+      else {
+        if (title) {
+          foundVisit.title = title;
+        }
+        if (city) {
+          foundVisit.city = city;
+        }
+        if (details) {
+          foundVisit.city_details = details;
+        }
+        await foundVisit.save();
+        return res
+          .status(200)
+          .json({ message: "Visit updated", data: foundVisit });
+      }
+    }
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
