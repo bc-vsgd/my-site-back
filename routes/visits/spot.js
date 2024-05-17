@@ -115,7 +115,7 @@ router.put("/visit/spot/:id/update", fileUpload(), async (req, res) => {
     const { id } = req.params;
     const { title, categories, description, link } = req.body;
     const picsArray = JSON.parse(req.body.picsArray);
-    // console.log("update spot, pics array: ", picsArray);
+    // console.log("back, update spot, pics array: ", picsArray);
     const pictures = req.files?.pictures;
     const foundSpot = await Spot.findOne({ _id: id });
     // The spot does not exist
@@ -130,24 +130,37 @@ router.put("/visit/spot/:id/update", fileUpload(), async (req, res) => {
       foundSpot.categories = JSON.parse(categories);
       foundSpot.description = description;
       foundSpot.link = link;
+      // Reset spot_pictures array
+      foundSpot.spot_pictures = [];
+
       // Picture(s)
-      if (pictures || picsArray) {
-        console.log("pictures");
+      if (
+        (Array.isArray(pictures) && pictures.length > 0) ||
+        (!Array.isArray(pictures) && pictures) ||
+        picsArray.length > 0
+      ) {
+        console.log("pictures || pics array");
         // if picsArray => [0]: spot_image; others: spot_pictures
-        if (picsArray) {
+        if (picsArray.length > 1) {
           // 1st (or only) picture => spot_image
           foundSpot.spot_image = picsArray[0];
           // If other pictures => spot_pictures
           if (picsArray.length > 1) {
-            foundSpot.spot_pictures = [];
+            // console.log("back, update spot,picsArray.length > 1");
             for (let i = 1; i < picsArray.length; i++) {
               foundSpot.spot_pictures.push(picsArray[i]);
             }
           }
           // If files-pictures
-          if (pictures) {
+          // if (pictures) {
+          if (
+            (Array.isArray(pictures) && pictures.length > 0) ||
+            (!Array.isArray(pictures) && pictures)
+          ) {
+            console.log("back update spot, pictures");
             // 1 file = {}
             if (!Array.isArray(pictures)) {
+              console.log("1 file");
               const convertedFile = convertToBase64(pictures);
               const sentFile = await cloudinary.uploader.upload(convertedFile, {
                 folder: `/visits/spots/${foundSpot._id}`,
@@ -157,6 +170,7 @@ router.put("/visit/spot/:id/update", fileUpload(), async (req, res) => {
 
             // > 1 file  =[]
             else {
+              console.log("many files");
               for (let i = 1; i < pictures.length; i++) {
                 const convertedFile = convertToBase64(pictures[i]);
                 const sentFile = await cloudinary.uploader.upload(
@@ -170,6 +184,39 @@ router.put("/visit/spot/:id/update", fileUpload(), async (req, res) => {
             }
           } // fin: if pictures
         } // fin: if (picsArray)
+        // If only selected pictures
+        else {
+          console.log("only pictures files");
+          // if 1 picture => spot_image
+          if (!Array.isArray(pictures)) {
+            const convertedFile = convertToBase64(pictures);
+            const sentFile = await cloudinary.uploader.upload(convertedFile, {
+              folder: `/visits/spots/${foundSpot._id}`,
+              public_id: "preview_img",
+            });
+            foundSpot.spot_image = sentFile;
+          }
+          // if many pictures
+          else {
+            // Main picture (spot_image)
+            const convertedFile = convertToBase64(pictures[0]);
+            const sentFile = await cloudinary.uploader.upload(convertedFile, {
+              folder: `/visits/spots/${foundSpot._id}`,
+              public_id: "preview_img",
+            });
+            foundSpot.spot_image = sentFile;
+            // Other pictures array (spot_pictures)
+            const array = [];
+            for (let i = 1; i < pictures.length; i++) {
+              const convertedFile = convertToBase64(pictures[i]);
+              const sentFile = await cloudinary.uploader.upload(convertedFile, {
+                folder: `/visits/spots/${foundSpot._id}`,
+              });
+              array.push(sentFile);
+            }
+            foundSpot.spot_pictures = array;
+          }
+        } // fin if (pictures only)
       } //fin  if (pictures || picsArray)
 
       // // if pictures: spot_pictures
