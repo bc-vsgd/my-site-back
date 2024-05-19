@@ -112,22 +112,22 @@ router.post("/visit/:id/spot/create", fileUpload(), async (req, res) => {
 // PUT: Update a spot by its id (NOT visit id)
 router.put("/visit/spot/:id/update", fileUpload(), async (req, res) => {
   try {
+    console.log("ok 1");
     const { id } = req.params;
     const { title, categories, description, link } = req.body;
     const picsArray = JSON.parse(req.body.picsArray);
-    // console.log("back, update spot, pics array: ", picsArray);
     const pictures = req.files?.pictures;
     const foundSpot = await Spot.findOne({ _id: id });
     // The spot does not exist
     if (!foundSpot) {
-      // console.log("! found spot");
       return res.status(400).json({ message: "This spot does not exist" });
     } else {
-      // console.log("found spot");
-      //
+      console.log("ok 2");
       // The spot exists
       foundSpot.title = title;
-      foundSpot.categories = JSON.parse(categories);
+      if (categories) {
+        foundSpot.categories = JSON.parse(categories);
+      }
       foundSpot.description = description;
       foundSpot.link = link;
       // Reset spot_pictures array
@@ -141,7 +141,7 @@ router.put("/visit/spot/:id/update", fileUpload(), async (req, res) => {
       ) {
         console.log("pictures || pics array");
         // if picsArray => [0]: spot_image; others: spot_pictures
-        if (picsArray.length > 1) {
+        if (picsArray.length > 0) {
           // 1st (or only) picture => spot_image
           foundSpot.spot_image = picsArray[0];
           // If other pictures => spot_pictures
@@ -152,15 +152,14 @@ router.put("/visit/spot/:id/update", fileUpload(), async (req, res) => {
             }
           }
           // If files-pictures
-          // if (pictures) {
           if (
             (Array.isArray(pictures) && pictures.length > 0) ||
             (!Array.isArray(pictures) && pictures)
           ) {
-            console.log("back update spot, pictures");
+            // console.log("back update spot, pictures");
             // 1 file = {}
             if (!Array.isArray(pictures)) {
-              console.log("1 file");
+              // console.log("1 file");
               const convertedFile = convertToBase64(pictures);
               const sentFile = await cloudinary.uploader.upload(convertedFile, {
                 folder: `/visits/spots/${foundSpot._id}`,
@@ -170,7 +169,7 @@ router.put("/visit/spot/:id/update", fileUpload(), async (req, res) => {
 
             // > 1 file  =[]
             else {
-              console.log("many files");
+              // console.log("many files");
               for (let i = 1; i < pictures.length; i++) {
                 const convertedFile = convertToBase64(pictures[i]);
                 const sentFile = await cloudinary.uploader.upload(
@@ -219,12 +218,9 @@ router.put("/visit/spot/:id/update", fileUpload(), async (req, res) => {
         } // fin if (pictures only)
       } //fin  if (pictures || picsArray)
 
-      // // if pictures: spot_pictures
-      // else: only pictures: [0]: spot image; others: spot_pictures
-
       // No picture => no Spot
       else {
-        console.log("no picture");
+        // console.log("no picture");
         return res
           .status(400)
           .json({ message: "There must be at least one picture" });
@@ -234,6 +230,21 @@ router.put("/visit/spot/:id/update", fileUpload(), async (req, res) => {
       return res
         .status(200)
         .json({ message: "Spot successfully updated !", data: foundSpot });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+
+// DELETE: Delete a spot by id
+router.delete("/visit/spot/:id/delete", async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (id) {
+      await Spot.findByIdAndDelete(id);
+      return res.status(200).json({ message: "Spot successfully deleted" });
+    } else {
+      return res.status(401).json({ message: "Missing spot id" });
     }
   } catch (error) {
     return res.status(500).json({ message: error.message });

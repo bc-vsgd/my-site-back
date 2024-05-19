@@ -109,3 +109,14 @@ router.put("/visits/visit/:id/update", async (req, res) => {
   }
 });
 module.exports = router;
+
+// DELETE: Delete a visit by id
+router.delete("/visits/visit/:id/delete", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Visit.findByIdAndDelete(id);
+    return res.status(200).json({ message: "Visit successfully deleted" });
+  } catch (error) {
+    return res.status(500).json({ message: message.error });
+  }
+});
