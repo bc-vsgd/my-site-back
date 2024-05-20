@@ -58,9 +58,11 @@ router.post("/visit/:id/spot/create", fileUpload(), async (req, res) => {
           });
           newSpot.spot_image = sentFile;
           // Coords
-          // const { latitude, longitude } = await getGeoLocation(sentFile.url);
+          const { latitude, longitude } = await getGeoLocation(sentFile.url);
           // console.log("geolocation: ", latitude);
           // console.log("geolocation: ", longitude);
+          newSpot.coords.longitude = longitude;
+          newSpot.coords.latitude = latitude;
         }
         // Many pictures
         else {
@@ -72,9 +74,11 @@ router.post("/visit/:id/spot/create", fileUpload(), async (req, res) => {
           });
           newSpot.spot_image = sentFile;
           // Coords
-          // const { latitude, longitude } = await getGeoLocation(sentFile.url);
+          const { latitude, longitude } = await getGeoLocation(sentFile.url);
           // console.log("geolocation: ", latitude);
           // console.log("geolocation: ", longitude);
+          newSpot.coords.longitude = longitude;
+          newSpot.coords.latitude = latitude;
           //
           // Other pictures array (spot_pictures)
           const picsArray = [];
@@ -146,6 +150,12 @@ router.put("/visit/spot/:id/update", fileUpload(), async (req, res) => {
           // 1st (or only) picture => spot_image
           // console.log("update: picsArray");
           foundSpot.spot_image = picsArray[0];
+          // Coords
+          //  const { latitude, longitude } = await getGeoLocation(sentFile.url);
+          // console.log("geolocation: ", latitude);
+          // console.log("geolocation: ", longitude);
+          //  foundSpot.coords.longitude = longitude;
+          //  foundSpot.coords.latitude = latitude;
           // If other pictures => spot_pictures
           if (picsArray.length > 1) {
             // console.log("update, pics array > 1, ", picsArray.length);
@@ -197,6 +207,12 @@ router.put("/visit/spot/:id/update", fileUpload(), async (req, res) => {
               public_id: "preview_img",
             });
             foundSpot.spot_image = sentFile;
+            // Coords
+            const { latitude, longitude } = await getGeoLocation(sentFile.url);
+            // console.log("geolocation: ", latitude);
+            // console.log("geolocation: ", longitude);
+            foundSpot.coords.longitude = longitude;
+            foundSpot.coords.latitude = latitude;
           }
           // if many pictures
           else {
@@ -211,6 +227,12 @@ router.put("/visit/spot/:id/update", fileUpload(), async (req, res) => {
               public_id: "preview_img",
             });
             foundSpot.spot_image = sentFile;
+            // Coords
+            const { latitude, longitude } = await getGeoLocation(sentFile.url);
+            // console.log("geolocation: ", latitude);
+            // console.log("geolocation: ", longitude);
+            foundSpot.coords.longitude = longitude;
+            foundSpot.coords.latitude = latitude;
             // Other pictures array (spot_pictures)
             const array = [];
             for (let i = 1; i < pictures.length; i++) {

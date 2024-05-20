@@ -13,6 +13,10 @@ const spotSchema = mongoose.Schema({
   spot_image: Object,
   // All pictures
   spot_pictures: [Object],
+  coords: {
+    longitude: Number,
+    latitude: Number,
+  },
   visit: {
     type: mongoose.Schema.Types.ObjectId,
     ref: Visit,
