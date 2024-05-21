@@ -58,7 +58,6 @@ router.get("/visit/:id/spots", async (req, res) => {
   try {
     const { id } = req.params;
     // console.log("id: ", id);
-    // const foundSpots = await Spot.find().populate("visit");
     const foundSpots = await Spot.find()
       .populate("visit", "_id")
       .find({ visit: { _id: id } });
