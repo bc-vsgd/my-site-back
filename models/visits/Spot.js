@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Visit = require("./Visit");
 const dbVisits = mongoose.createConnection(
-  `${process.env.MONGODB_URI_VISITS}pics-visits`
+  `${process.env.MONGODB_URI_VISITS}visits`
 );
 
 const spotSchema = mongoose.Schema({

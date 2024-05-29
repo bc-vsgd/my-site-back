@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const dbVisits = mongoose.createConnection(
-  `${process.env.MONGODB_URI_VISITS}pics-visits`
+  `${process.env.MONGODB_URI_VISITS}visits`
 );
 
 const authorSchema = mongoose.Schema({

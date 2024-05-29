@@ -17,11 +17,12 @@ router.post("/visits/visit/create", async (req, res) => {
     }
     // Token found => new Visit with authenticated Author
     else {
-      const { title, city, city_details } = req.body;
+      const { title, city, city_details, description } = req.body;
       const newVisit = new Visit({
         title,
         city,
         city_details,
+        description,
         author: foundAuthor,
       });
       await newVisit.save();
@@ -74,7 +75,7 @@ router.get("/visit/:id/spots", async (req, res) => {
 router.put("/visits/visit/:id/update", async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, city, details } = req.body;
+    const { title, city, details, description } = req.body;
     const token = req.headers.authorization.replace(`Bearer `, "");
     const foundAuthor = await Author.findOne({ token: token });
     if (!foundAuthor) {
@@ -96,6 +97,9 @@ router.put("/visits/visit/:id/update", async (req, res) => {
         }
         if (details) {
           foundVisit.city_details = details;
+        }
+        if (description) {
+          foundVisit.description = description;
         }
         await foundVisit.save();
         return res
