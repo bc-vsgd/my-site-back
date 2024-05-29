@@ -138,12 +138,10 @@ router.get("/countries/search", async (req, res) => {
   if (curr) {
     try {
       const { data } = await axios.get(`${countriesUrl}/currency/${curr}`);
-      return res
-        .status(200)
-        .json({
-          message: `Countries searched by currency: ${curr}`,
-          data: data,
-        });
+      return res.status(200).json({
+        message: `Countries searched by currency: ${curr}`,
+        data: data,
+      });
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }

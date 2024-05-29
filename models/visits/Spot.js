@@ -1,8 +1,13 @@
 const mongoose = require("mongoose");
 const Visit = require("./Visit");
-const dbVisits = mongoose.createConnection(
-  `${process.env.MONGODB_URI_VISITS}visits`
-);
+
+// Local
+// const dbVisits = mongoose.createConnection(
+//   `${process.env.MONGODB_URI_VISITS}visits`
+// );
+
+// Remote
+const dbVisits = mongoose.createConnection(`${process.env.MONGODB_URI}visits`);
 
 const spotSchema = mongoose.Schema({
   title: String,
