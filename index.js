@@ -20,6 +20,10 @@ app.use(visitSpotRoutes);
 app.use(visitAuthorRoutes);
 app.use(visitVisitRoutes);
 
+// TODOLIST
+const tasksRoutes = require("./routes/tasks/tasks");
+app.use(tasksRoutes);
+
 // VINTED
 const vintedHomeRoutes = require("./routes/vinted/home");
 const vintedOfferRoutes = require("./routes/vinted/offer");

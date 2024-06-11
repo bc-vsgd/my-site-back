@@ -111,7 +111,6 @@ router.put("/visits/visit/:id/update", async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 });
-module.exports = router;
 
 // DELETE: Delete a visit by id
 router.delete("/visits/visit/:id/delete", async (req, res) => {
@@ -123,3 +122,4 @@ router.delete("/visits/visit/:id/delete", async (req, res) => {
     return res.status(500).json({ message: message.error });
   }
 });
+module.exports = router;
